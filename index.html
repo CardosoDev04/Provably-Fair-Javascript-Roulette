@@ -1,0 +1,36 @@
+<link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+<div align = 'center' class = 'text' id = 'balance-container'>
+  <h2>Your Balance : </h2>
+  <p class = 'balance-amount'>Balance</p>
+</div>
+
+<div class='roulette-wrapper'>
+  <div class='selector'></div>
+  <div class='wheel'></div>
+</div>
+
+<div align = 'center' class = 'input'>
+  <input type="text" placeholder = 'Color: red,green,black' id = 'color-input'>
+  <input type="text" placeholder = 'Bet Amount' id = 'bet-input'>
+  <button id = 'spin-button'>
+    Spin Wheel
+  </button>
+</div>
+
+<div align = 'center' class = 'public-seed-container'>
+  <h2>Public Roll Seed</h2>
+  <p class = 'seed'></p>
+</div>
+
+<div align = 'center' class = 'outcome-seed-container'>
+  <h2 >Client Seed</h2>
+  <p class = 'client-seed'></p>
+  <h2>Outcome Hash</h2>
+  <p class = 'outcome-seed'></p>
+  
+  <input type="text" placeholder = 'Amount' id = 'add-balance-input'>
+  <button class = 'add-balance-input'>Add Balance</button>
+</div>
