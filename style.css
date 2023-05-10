@@ -1,6 +1,10 @@
+html {
+    height: 100%;
+}
 body{
   font-family: 'Titillium Web', sans-serif;
-  background:#191B28;
+     background: rgb(2,0,36);
+background: linear-gradient(155deg, rgba(2,0,36,1) 0%, rgba(9,5,103,1) 53%, rgba(1,15,149,1) 98%); 
 }
 
 .roulette-wrapper{
@@ -21,6 +25,30 @@ body{
   position:absolute;
   z-index:2;
 }
+.previous-rolls {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.previous-roll {
+  
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 50%;
+  
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  display:inline-block
+   
+}
+
+
+
 
 .roulette-wrapper .wheel{
   display:flex;
@@ -44,15 +72,15 @@ body{
 }
 
 .card.red{
-  background:#F95146;
+  background:#da117b;
 }
 
 .card.black{
-  background:#2D3035;
+  background:#7e75dd;
 }
 
 .card.green{
-  background:#00C74D;
+  background:#C8FD01;
 }
 
 *{

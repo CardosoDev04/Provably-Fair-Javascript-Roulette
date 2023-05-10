@@ -1,19 +1,33 @@
 
-
 let balance = 0;
 let balanceQty = document.querySelector(".balance-amount");
 
 balanceQty.textContent = balance;
 
+var audio = new Audio('https://audio.jukehost.co.uk/api/external/download/oHUVPGIMh2PdyMT6n0kE5KVOLuNp6bMC');
+
 if(balance == 0.0){
      $('#spin-button').prop('disabled', true);
   }
 
-setInterval(disableIfZero,6000);
+setInterval(disableIfZero,1000);
+
+
 
 $(document).ready(function() {
   
-  var balanceAddInput = document.querySelector('.add-balance-input')
+  var balanceAddInput = document.getElementById('add-balance-input')
+
+$('.add-balance-button').on('click', function() {
+    var balanceAddInput = document.getElementById('add-balance-input');
+    var addBalanceValue = parseFloat(balanceAddInput.value); // Parse the input value as a float
+    balance += addBalanceValue;
+    balanceQty.textContent = balance;
+  enableIfBigger();
+});
+
+
+
   
   
 	//setup multiple rows of colours, can also add and remove while spinning but overall this is easier.
@@ -22,7 +36,7 @@ $(document).ready(function() {
  
  	$('#spin-button').on('click', function(){
     var isSpinning = true;
-    
+    audio.play();
      
     
     $('#spin-button').prop('disabled', true); // disable the button
@@ -32,21 +46,23 @@ setTimeout(function() {
     
     setTimeout(function() {
     isSpinning = false
+      
       console.log(isSpinning)
 }, 6100);
     
-    $('#add-balance-button').on('click', function() {
-      var addBalanceValue = balanceAddInput.value;
-      balance = balance + parseFloat(addBalanceValue);
-      balanceQty.textContent = balance;
-      
-    });
+    
       
     
     var textInput = document.getElementById("color-input");
     var betColor = textInput.value;
     var betInput = document.getElementById("bet-input");
     var betAmount = betInput.value;
+     if (betAmount > balance) {
+        alert("You don't have enough money.");
+        $('#spin-button').prop('disabled', false);
+        return; // exit the function to prevent the wheel from spinning
+    }
+    else
     balance = balance - betAmount;
     balanceQty.textContent = balance;
     
@@ -62,15 +78,16 @@ setTimeout(function() {
     
     p.textContent = serverSeed;
     console.log(result)
+    
+ 
    
-    spinWheel(result,betColor,betAmount);
+    spinWheel(result,betColor,betAmount,clientSeed,serverSeed,outcomehash);
+    setTimeout(function() {
+      var color = colorOfResult(result);
+    addPreviousRoll(color);
+}, 6100);
     
-    var outcomeContainer = document.querySelector('.outcome-seed-container');
-    var p1 = outcomeContainer.querySelector('.client-seed') ;
-    p1.textContent = clientSeed;
     
-    var p2 = outcomeContainer.querySelector('.outcome-seed');
-    p2.textContent = outcomehash;
    
     console.log(isSpinning)
     
@@ -108,8 +125,9 @@ function initWheel(){
   }
 }
 
-function spinWheel(roll, betColor, betAmount){
+function spinWheel(roll, betColor, betAmount,clientSeed,serverSeed,outcomehash){
   
+
   var $wheel = $('.roulette-wrapper .wheel'),
   		order = [0, 11, 5, 10, 6, 9, 7, 8, 1, 14, 2, 13, 3, 12, 4],
       position = order.indexOf(roll);
@@ -143,15 +161,24 @@ function spinWheel(roll, betColor, betAmount){
     var resetTo = -(position * card + randomize);
 		$wheel.css('transform', 'translate3d('+resetTo+'px, 0px, 0px)');
     checkWin(roll,betColor,betAmount);
+    
+    var outcomeContainer = document.querySelector('.outcome-seed-container');
+    var p1 = outcomeContainer.querySelector('.client-seed') ;
+    p1.textContent = clientSeed;
+    
+    var p2 = outcomeContainer.querySelector('.outcome-seed');
+    p2.textContent = outcomehash;
+    
       }, 6 * 1000);
-  
-  
+ 
 }
 
 function generateSeed(length) {
   const seed = CryptoJS.lib.WordArray.random(length/2).toString();
   return seed;
 }
+
+setInterval(fixBalance,100);
 
 function sha256(clientSeed, serverSeed) {
   const input = `${serverSeed}:${clientSeed}`;
@@ -208,7 +235,11 @@ function checkWin(result, betColor, betAmount){
        balance = balance + (betAmount * 7)
      }
      alert("You won!")
+     
    }
+  else if(betColor != 'red' && betColor != 'black' && betColor !='green') {
+    alert('Please insert the color in lower case.')
+  }
   else {
     balance = balance;
     alert("You've lost!")
@@ -225,6 +256,37 @@ function disableIfZero(){
    if (balance <= 0) {
   $('#spin-button').prop('disabled', true);
 }
+}
+function enableIfBigger(){
+   if (balance > 0) {
+  $('#spin-button').prop('disabled', false);
+}
+}
+
+function addPreviousRoll(resultColor) {
+  const previousRolls = document.getElementById("previous-rolls");
+  const card = document.createElement("div");
+  card.classList.add("previous-roll");
+  card.style.backgroundColor = resultColor;
+  previousRolls.appendChild(card, previousRolls.firstChild);
+}
+
+
+
+function colorOfResult(result){
+  const red = [1,2,3,4,5,6,7]
+  const blue = [8,9,10,11,12,13,14]
+  
+  console.log(result)
+  
+      if(red.includes(result)) return '#da117b'
+        else if(blue.includes(result)) return '#7e75dd'
+            else return '#C8FD01'
+  
+  }
+
+function fixBalance(){
+  balance = balance.toFixed(-2);
 }
 
 
